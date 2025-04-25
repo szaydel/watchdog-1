@@ -1,7 +1,7 @@
 """:module: watchdog.observers.fsevents
 :synopsis: FSEvents based emitter implementation.
 :author: yesudeep@google.com (Yesudeep Mangalapilly)
-:author: contact@tiger-222.fr (Mickaël Schoentgen)
+:author: Mickaël Schoentgen <contact@tiger-222.fr>
 :platforms: macOS
 """
 
@@ -12,7 +12,6 @@ import os
 import threading
 import time
 import unicodedata
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 import _watchdog_fsevents as _fsevents
@@ -33,6 +32,8 @@ from watchdog.observers.api import DEFAULT_EMITTER_TIMEOUT, DEFAULT_OBSERVER_TIM
 from watchdog.utils.dirsnapshot import DirectorySnapshot
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from watchdog.events import FileSystemEvent, FileSystemEventHandler
     from watchdog.observers.api import EventQueue, ObservedWatch
 

@@ -159,6 +159,7 @@ def test_permission_error(p):
 
     diff = DirectorySnapshotDiff(ref, new_snapshot)
     assert repr(diff)
+    assert len(diff) == 1
 
     # Children of a/b/ are no more accessible and so removed in the new snapshot
     assert diff.dirs_deleted == [(p("a", "b", "c"))]
@@ -196,6 +197,7 @@ def test_ignore_device(p):
         # deleted and re-created.
         snapshot = DirectorySnapshot(p(""))
         diff_without_device = DirectorySnapshotDiff(ref, snapshot, ignore_device=True)
+        assert not len(diff_without_device)
         assert diff_without_device.files_deleted == []
         assert diff_without_device.files_created == []
 
@@ -210,7 +212,9 @@ def test_empty_snapshot(p):
     mkdir(p("b", "c"), parents=True)
     ref = DirectorySnapshot(p(""))
     empty = EmptyDirectorySnapshot()
+    assert repr(empty) == "{}"
 
     diff = DirectorySnapshotDiff(empty, ref)
+    assert len(diff) == 4
     assert diff.files_created == [p("a")]
     assert sorted(diff.dirs_created) == sorted([p(""), p("b"), p("b", "c")])

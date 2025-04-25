@@ -1,17 +1,17 @@
 """:module: watchdog.utils.dirsnapshot
 :synopsis: Directory snapshots and comparison.
 :author: yesudeep@google.com (Yesudeep Mangalapilly)
-:author: contact@tiger-222.fr (Mickaël Schoentgen)
+:author: Mickaël Schoentgen <contact@tiger-222.fr>
 
 .. ADMONITION:: Where are the moved events? They "disappeared"
 
-        This implementation does not take partition boundaries
-        into consideration. It will only work when the directory
-        tree is entirely on the same file system. More specifically,
-        any part of the code that depends on inode numbers can
-        break if partition boundaries are crossed. In these cases,
-        the snapshot diff will represent file/directory movement as
-        created and deleted events.
+    This implementation does not take partition boundaries
+    into consideration. It will only work when the directory
+    tree is entirely on the same file system. More specifically,
+    any part of the code that depends on inode numbers can
+    break if partition boundaries are crossed. In these cases,
+    the snapshot diff will represent file/directory movement as
+    created and deleted events.
 
 Classes
 -------
@@ -152,6 +152,9 @@ class DirectorySnapshotDiff:
             len(self._dirs_modified),
             len(self._dirs_moved),
         )
+
+    def __len__(self) -> int:
+        return sum(len(getattr(self, attr)) for attr in dir(self) if attr.startswith(("_dirs_", "_files_")))
 
     @property
     def files_created(self) -> list[bytes | str]:
@@ -401,7 +404,7 @@ class EmptyDirectorySnapshot(DirectorySnapshot):
     """
 
     def __init__(self) -> None:
-        pass
+        self._stat_info: dict[bytes | str, os.stat_result] = {}
 
     @staticmethod
     def path(_: Any) -> None:
